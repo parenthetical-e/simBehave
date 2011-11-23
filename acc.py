@@ -72,3 +72,4 @@ def random_learn(N,p,loc):
 	p = p_1 + p_2
 
 	return acc, p
+

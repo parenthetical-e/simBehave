@@ -42,7 +42,7 @@ def event_random(N,k,mult=1):
 
 	## Create N conditions, randomize their order
 	conditions = []
-	[conditions.extend([int(cond)]*k) for cond in range(0,N+1)]
+	[conditions.extend([int(cond)]*k) for cond in range(0,(N+1))]
 	np.random.shuffle(conditions)
 		# shuffle is inplace, ysy.
 	
@@ -53,3 +53,39 @@ def event_random(N,k,mult=1):
 		[conditions_mult.extend([c]*int(mult)) for c in conditions]
 		return conditions_mult
 
+
+def intra_deter(conditions,n_intra,terminal=True):
+	"""
+	Adds n_intra deterministic intra-trial events to conditions. 
+	If terminal is True, num_intra_event is n+1 events, n plus 
+	a terminal event/state (0).
+	Note: incoming conditions must be integers.
+	"""
+	## 	Each cond in conditions gets expanded by:
+	##		range(cond,(cond*num_intra_event),num_intra_event)
+	
+	## Make tuples for each possible intra.
+	intra_tuples = {}
+	intra_tuples[0] = [0,] * n_intra
+		# Baseline/null states need to 
+		# expanded/mapped to intra_event space.
+	unique_conditions = list(set(conditions))
+	unique_conditions.remove(0)
+	unique_conditions.sort()
+	for uc in unique_conditions:
+		if terminal:
+			intra_tuples[uc] = range(uc,uc+n_intra)+[0,]
+		else:
+			intra_tuples[uc] = range(uc,uc+n_intra)
+
+	## And map...
+	intra_conditions = []
+	[intra_conditions.extend(intra_tuples[cond]) for cond in conditions]
+	
+	return intra_conditions
+
+
+def intra_prob(conditions,n_intra,opts=([1,2],[3,4]),p_opt=([.5,.5],[.8,.2]),terminal=True):
+	"""
+	Adds n_intra event for each cond in conditons.  Intra events
+	"""
