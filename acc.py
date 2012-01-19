@@ -16,14 +16,14 @@ def random(N,p):
 def learn(N,loc):
 	"""
 	Generates and returns an binomial array of length N where the p(1) 
-	(also returned) increases with the CDF of the normal distrobution, 
-	intergrated from 0.01 to 10, plus white noise.
+	(also returned) increases with the CDF of the normal distribution, 
+	integrated from 0.01 to 10, plus white noise.
 	
-	The learning rate is determind by sampling of a normal distrobution 
+	The learning rate is determined by sampling of a normal distribution 
 	centered on loc.  
 	
-	Note: A loc of 3 gives curves qualitativily similar to learning 
-	patterns often observed in the abstract catagorization tasks 
+	Note: A loc of 3 gives curves qualitatively similar to learning 
+	patterns often observed in the abstract categorization tasks 
 	common to the Seger Lab.
 	"""
 
@@ -40,21 +40,21 @@ def learn(N,loc):
 	return acc, list(p_values)
 
 
-def random_learn(N,p,loc):
+def random_learn(N,p_rand,loc):
 	"""
 	Generates and returns an binomial array of length N where the p(1) 
-	(also returned) increases with the CDF of the normal distrobution, 
-	after trial T (sampled from a uniform distribution).  Before T accuracy 
-	is random.
+	(also returned) increases with the CDF of the normal distribution, 
+	after random trial T (sampled from a uniform distribution).  Before
+	T accuracy is random governed .
 	"""
 
 	trial_idx = range(N)
 	T = int(np.random.randint(0,N,1))
 	
 	## Random:
-	acc_1 = list(np.random.binomial(1,p,(N))[:T+1])
+	acc_1 = list(np.random.binomial(1,p_rand,(N))[:T+1])
 		# +1 so it actually goes to T
-	p_1 = ([p]*N)[:T]
+	p_1 = ([p_rand]*N)[:T]
 
 	## Learn:
 	## Create a noisy range for the CDF,
@@ -65,7 +65,7 @@ def random_learn(N,p,loc):
 
 	## And p_2 becomes acc_2
 	acc_2 = []
-	[acc_2.append(int(np.random.binomial(1,p,(1)))) for p in p_2]
+	[acc_2.append(int(np.random.binomial(1,p_i,(1)))) for p_i in p_2]
 
 	## Concat _1 and _2 (all are lists)
 	acc = acc_1 + acc_2 
