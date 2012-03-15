@@ -83,9 +83,3 @@ def intra_deter(conditions,n_intra,terminal=True):
 	[intra_conditions.extend(intra_tuples[cond]) for cond in conditions]
 	
 	return intra_conditions
-
-
-def intra_prob(conditions,n_intra,opts=([1,2],[3,4]),p_opt=([.5,.5],[.8,.2]),terminal=True):
-	"""
-	Adds n_intra event for each cond in conditons.  Intra events
-	"""

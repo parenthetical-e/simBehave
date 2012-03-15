@@ -1,5 +1,4 @@
 """Monte Carlo simulations of accuracy"""
-## TESTED
 import numpy as np
 import scipy.stats as stats
 

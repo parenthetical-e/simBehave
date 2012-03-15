@@ -1,11 +1,48 @@
 """ Uses trials and acc to simulate a behavioral experiment"""
 import simBehave
 
-def all_learn(N,k,loc,event=True,rand_learn=True):
+def random(N,k,event=True):
 	"""
-	Returns a trialset matching N,k along with accuracy and probability 
-	lists to match (generated w/ behave.learn()).  If event is True 	
-	event_random is used in place of random to create the trialset.
+	Returns a trialset matching N,k along with matching accuracy and
+	probability lists. If event is True event_random is used in place of 
+	random to create the trialset.	
+	"""
+	from copy import deepcopy
+
+	if event:
+		trialset = simBehave.trials.event_random(N,k,mult=1)
+	else:
+		trialset = simBehave.trials.random(N,k)
+	
+	N_c = deepcopy(N)
+	if event: N_c += 1
+	acc = [0]*(N_c*k)
+	p = [0]*(N_c*k)
+
+	names = list(set(trialset))
+	for n in names:
+		## Skip null trials
+		if (n is 0) | (n is '0'):
+			print('n was 0, skipping.')
+			continue
+
+		## How many trials/condition?
+		acc_n = []; p_n = []
+		acc_n, p_n = simBehave.acc.random(k,1/N)
+		
+		for ii,t in enumerate(trialset):
+			if t == n:
+				acc[ii] = acc_n.pop(0)
+				p[ii] = p_n.pop(0)
+
+	return trialset, acc, p
+
+
+def learn(N,k,loc,event=True):
+	"""
+	Returns a trialset matching N,k along with matching accuracy and
+	probability lists. If event is True event_random is used in place of 
+	random to create the trialset.
 	"""
 	## For each condition name (n),
 	## create acc_n,p_n then map those
@@ -32,11 +69,7 @@ def all_learn(N,k,loc,event=True,rand_learn=True):
 
 		## How many trials/condition?
 		acc_n = []; p_n = []
-		if rand_learn:
-			## random_learn(N,p,loc):
-			acc_n, p_n = simBehave.acc.random_learn(k,1/N,loc)
-		else:
-			acc_n, p_n = simBehave.acc.learn(k,loc)
+		acc_n, p_n = simBehave.acc.random_learn(k,1/N,loc)
 		
 		for ii,t in enumerate(trialset):
 			if t == n:
