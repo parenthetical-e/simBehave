@@ -46,29 +46,25 @@ def random_learn(N,p_rand,loc):
 	after random trial T (sampled from a uniform distribution).  Before
 	T accuracy is random governed .
 	"""
+	from simBehave.acc import random
 
-	trial_idx = range(N)
 	T = int(np.random.randint(0,N,1))
 	
-	## Random:
-	acc_1 = list(np.random.binomial(1,p_rand,(N))[:T+1])
-		# +1 so it actually goes to T
-	p_1 = ([p_rand]*N)[:T]
-
-	## Learn:
-	## Create a noisy range for the CDF,
-	## and add noise to its center too
+	acc_1, p_1 = random(T,p_rand)
+	
+	# Learn:
 	trials = np.arange(.01,10,10/float(N-T))
 	trials = trials + stats.norm.rvs(size=trials.shape[0]) 
-	p_2 = list(stats.norm.cdf(trials,loc))
-
-	## And p_2 becomes acc_2
+	p_2 = stats.norm.cdf(trials,loc)			
+	p_2[p_2 < 0.5] = 0.5
+		## Rwmove p vals lees than 0.5 -- 
+		## we don't want below chance sampling
+		
 	acc_2 = []
-	[acc_2.append(int(np.random.binomial(1,p_i,(1)))) for p_i in p_2]
-
-	## Concat _1 and _2 (all are lists)
-	acc = acc_1 + acc_2 
-	p = p_1 + p_2
+	[acc_2.append(int(np.random.binomial(1,p,(1)))) for p in p_2]
+	
+	acc = acc_1 + acc_2
+	p = list(p_1) + list(p_2)
 
 	return acc, p
 
