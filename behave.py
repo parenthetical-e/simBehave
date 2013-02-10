@@ -23,7 +23,6 @@ def random(N,k,event=True):
 	for n in names:
 		## Skip null trials
 		if (n is 0) | (n is '0'):
-			print('n was 0, skipping.')
 			continue
 
 		## How many trials/condition?
@@ -64,7 +63,6 @@ def learn(N,k,loc,event=True):
 	for n in names:
 		## Skip null trials
 		if (n is 0) | (n is '0'):
-			print('n was 0, skipping.')
 			continue
 
 		## How many trials/condition?
